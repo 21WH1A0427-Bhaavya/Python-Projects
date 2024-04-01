@@ -1,0 +1,372 @@
+import pygame
+from pygame import mixer
+from playsound import playsound
+import tkinter as tk
+from tkinter import *
+import sys
+from tkinter import messagebox
+from tkinter.filedialog import *
+
+pygame.mixer.init()
+pygame.font.init() #intializing the font
+
+s_width = 800
+s_height = 700
+play_width = 300  #300 // 10 = 30 width per block
+play_height = 600  #600 // 20 = 30 height per block
+top_left_x = (s_width - play_width) // 2
+top_left_y = s_height - play_height
+
+title_img = pygame.image.load(r'C:\Users\Bhaavya\Desktop\College\Programming\games\timer_app\new_title.png')
+tomato_img = pygame.image.load(r'C:\Users\Bhaavya\Desktop\College\Programming\games\timer_app\pomodoro-technique.png')
+calc_img = pygame.image.load(r'C:\Users\Bhaavya\Desktop\College\Programming\games\timer_app\calculate.png')
+notes_img = pygame.image.load(r'C:\Users\Bhaavya\Desktop\College\Programming\games\timer_app\bb80856c8238d149ed6ebfad6746a9ad.png')
+todo_img = pygame.image.load(r'C:\Users\Bhaavya\Desktop\College\Programming\games\timer_app\to-do-list.png')
+backdrop = pygame.image.load(r'C:\Users\Bhaavya\Desktop\College\Programming\games\timer_app\b2.1g .jpg')
+class Button():
+    def __init__(self, x, y, image, scale):
+        width = image.get_width()
+        height = image.get_height()
+        self.image = pygame.transform.scale(image, (int(width * scale), int(height * scale)))
+        self.rect = self.image.get_rect()
+        self.rect.topleft = (x,y)
+        self.clicked = False
+
+
+    def draw(self, surface):
+        action = False
+        pos = pygame.mouse.get_pos()
+        if self.rect.collidepoint(pos):
+            if pygame.mouse.get_pressed()[0] == 1 and self.clicked == False:
+                self.clicked = True
+                action = True
+
+        if pygame.mouse.get_pressed()[0] == 0:
+            self.clicked = False
+        surface.blit(self.image, (self.rect.x, self.rect.y))
+        
+        return action
+
+title_b = Button(130, 200, title_img, 1)
+todo_b = Button(130, 408, todo_img, 0.2)
+calc_b = Button(289, 415, calc_img, 0.17)
+tomato_b = Button(430, 400, tomato_img, 0.5)
+notes_b = Button(580, 408, notes_img, 0.2)
+
+class TXT_Button():
+	def __init__(self, surface=None, pos=None, width=None, height=None, text_input=None, font=None, base_color=None, hovering_color=None):
+		self.surface = surface
+		self.x_pos = pos[0]
+		self.y_pos = pos[1]
+		self.width = width
+		self.height = height
+		self.font = font
+		self.base_color, self.hovering_color = base_color, hovering_color
+		self.text_input = text_input
+		self.text = self.font.render(self.text_input, True, self.base_color)
+		if self.surface is None:
+			self.surface = self.text
+		else:
+			self.surface = pygame.transform.smoothscale(self.surface, (width, height))
+		self.rect = self.surface.get_rect(center=(self.x_pos, self.y_pos))
+		self.text_rect = self.text.get_rect(center=(self.x_pos, self.y_pos))
+
+	def update(self, screen):
+		if self.surface is not None:
+			screen.blit(self.surface, self.rect)
+		screen.blit(self.text, self.text_rect)
+
+	def check_for_input(self, position):
+		if position[0] in range(self.rect.left, self.rect.right) and position[1] in range(self.rect.top, self.rect.bottom):
+			return True
+		return False
+
+	def change_color(self, position):
+		if position[0] in range(self.rect.left, self.rect.right) and position[1] in range(self.rect.top, self.rect.bottom):
+			self.text = self.font.render(self.text_input, True, self.hovering_color)
+		else:
+			self.text = self.font.render(self.text_input, True, self.base_color)
+
+def pomodoro(win):
+    run = True
+    while run:
+        win.fill((255, 255, 255))
+        win.blit(backdrop, backdrop.get_rect(center=(s_width/2, s_height/2)))
+        pygame.display.update()
+
+        CLOCK = pygame.time.Clock()
+
+        WHITE_BUTTON = pygame.image.load(r"C:\Users\Bhaavya\Desktop\College\Programming\games\timer_app\button.png")
+
+        FONT = pygame.font.Font(r"C:\Users\Bhaavya\Desktop\College\Programming\games\timer_app\Arial Rounded MT Bold Regular\Arial Rounded MT Bold Regular.ttf", 120)
+        timer_text = FONT.render("25:00", True, "black")
+        timer_text_rect = timer_text.get_rect(center=(s_width/2, s_height/2-25))
+
+        START_STOP_BUTTON = TXT_Button(WHITE_BUTTON, (s_width/2, s_height/2+100), 170, 60, "START", 
+                    pygame.font.Font(r"C:\Users\Bhaavya\Desktop\College\Programming\games\timer_app\Arial Rounded MT Bold Regular\Arial Rounded MT Bold Regular.ttf", 20), "#c97676", "#9ab034")
+        POMODORO_BUTTON = TXT_Button(WHITE_BUTTON, (s_width/2-150, s_height/2-140), 150, 50, "Pomodoro", 
+                    pygame.font.Font(r"C:\Users\Bhaavya\Desktop\College\Programming\games\timer_app\Arial Rounded MT Bold Regular\Arial Rounded MT Bold Regular.ttf", 20), "#c97676", "#9ab034")
+        SHORT_BREAK_BUTTON = TXT_Button(WHITE_BUTTON, (s_width/2, s_height/2-140), 150, 50, "Short Break", 
+                    pygame.font.Font(r"C:\Users\Bhaavya\Desktop\College\Programming\games\timer_app\Arial Rounded MT Bold Regular\Arial Rounded MT Bold Regular.ttf", 20), "#c97676", "#9ab034")
+        LONG_BREAK_BUTTON = TXT_Button(WHITE_BUTTON, (s_width/2+150, s_height/2-140), 150, 50, "Long Break", 
+                    pygame.font.Font(r"C:\Users\Bhaavya\Desktop\College\Programming\games\timer_app\Arial Rounded MT Bold Regular\Arial Rounded MT Bold Regular.ttf", 20), "#c97676", "#9ab034")
+
+        POMODORO_LENGTH = 1500 # 1500 secs / 25 mins
+        SHORT_BREAK_LENGTH = 300 # 300 secs / 5 mins
+        LONG_BREAK_LENGTH = 900 # 900 secs / 15 mins
+
+        current_seconds = POMODORO_LENGTH
+        pygame.time.set_timer(pygame.USEREVENT, 1000)
+        started = False
+
+        while True:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    main_menu(win)
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    if START_STOP_BUTTON.check_for_input(pygame.mouse.get_pos()):
+                        if started:
+                            started = False
+                        else:
+                            started = True
+                    if POMODORO_BUTTON.check_for_input(pygame.mouse.get_pos()):
+                        current_seconds = POMODORO_LENGTH
+                        started = False
+                    if SHORT_BREAK_BUTTON.check_for_input(pygame.mouse.get_pos()):
+                        current_seconds = SHORT_BREAK_LENGTH
+                        started = False
+                    if LONG_BREAK_BUTTON.check_for_input(pygame.mouse.get_pos()):
+                        current_seconds = LONG_BREAK_LENGTH
+                        started = False
+                    if started:
+                        START_STOP_BUTTON.text_input = "STOP"
+                        START_STOP_BUTTON.text = pygame.font.Font(r"C:\Users\Bhaavya\Desktop\College\Programming\games\timer_app\Arial Rounded MT Bold Regular\Arial Rounded MT Bold Regular.ttf", 20).render(
+                                        START_STOP_BUTTON.text_input, True, START_STOP_BUTTON.base_color)
+                    else:
+                        START_STOP_BUTTON.text_input = "START"
+                        START_STOP_BUTTON.text = pygame.font.Font(r"C:\Users\Bhaavya\Desktop\College\Programming\games\timer_app\Arial Rounded MT Bold Regular\Arial Rounded MT Bold Regular.ttf", 20).render(
+                                        START_STOP_BUTTON.text_input, True, START_STOP_BUTTON.base_color)
+                if event.type == pygame.USEREVENT and started:
+                    current_seconds -= 1
+
+
+            win.fill("white")
+            win.blit(backdrop, backdrop.get_rect(center=(s_width/2, s_height/2)))
+            
+            START_STOP_BUTTON.update(win)
+            START_STOP_BUTTON.change_color(pygame.mouse.get_pos())
+            POMODORO_BUTTON.update(win)
+            POMODORO_BUTTON.change_color(pygame.mouse.get_pos())
+            SHORT_BREAK_BUTTON.update(win)
+            SHORT_BREAK_BUTTON.change_color(pygame.mouse.get_pos())
+            LONG_BREAK_BUTTON.update(win)
+            LONG_BREAK_BUTTON.change_color(pygame.mouse.get_pos())
+
+            if current_seconds >= 0:
+                display_seconds = current_seconds%60
+                display_minutes = int(current_seconds/60) % 60
+
+            timer_text = FONT.render(f"{display_minutes:02}:{display_seconds:02}", True, "black")
+            win.blit(timer_text, timer_text_rect)
+
+            pygame.display.update()
+        
+def calculator():
+        
+    global calculation
+    calculation = ""
+
+    root = tk.Tk()
+    root.title("Calculator")
+    root.geometry("295x330")
+    root.configure(bg="#1C1C1C")
+        
+    def add(symbol):
+        global calculation
+        calculation += str(symbol)
+        text_res.delete(1.0, "end")
+        text_res.insert(1.0, calculation)
+
+    def evaluate():
+        global calculation
+        try:
+            result = str(eval(calculation))
+            calculation = ""
+            text_res.delete(1.0, "end")
+            text_res.insert(1.0, result)
+        except:
+            clear()
+            text_res.insert(1.0, "Error")
+
+    def clear():
+        global calculation
+        calculation = ""
+        text_res.delete(1.0, "end") 
+
+    def on_closing():
+        root.destroy()
+        return
+    root.protocol("WM_DELETE_WINDOW", on_closing)
+
+    text_res = tk.Text(root, height=3, width = 16, font=("Arial", 24), bg="#1C1C1C", fg = "white")
+    text_res.grid(columnspan=5)
+
+    btn1 = tk.Button(root, text="1", command=lambda: add(1), width=5, font=(r"C:\Users\Bhaavya\Desktop\College\Programming\games\timer_app\digital-7.ttf", 14), bg='#505050', fg = 'white')
+    btn1.grid(row=2, column=1, columnspan=1)
+    btn2 = tk.Button(root, text="2", command=lambda: add(2), width=5, font=("Arial", 14), bg='#505050', fg = 'white')
+    btn2.grid(row=2, column=2, columnspan=1)
+    btn3 = tk.Button(root, text="3", command=lambda: add(3), width=5, font=("Arial", 14), bg='#505050', fg = 'white')
+    btn3.grid(row=2, column=3, columnspan=1)
+    btn4 = tk.Button(root, text="4", command=lambda: add(4), width=5, font=("Arial", 14), bg='#505050', fg = 'white')
+    btn4.grid(row=3, column=1, columnspan=1)
+    btn5 = tk.Button(root, text="5", command=lambda: add(5), width=5, font=("Arial", 14), bg='#505050', fg = 'white')
+    btn5.grid(row=3, column=2, columnspan=1)
+    btn6 = tk.Button(root, text="6", command=lambda: add(6), width=5, font=("Arial", 14), bg='#505050', fg = 'white')
+    btn6.grid(row=3, column=3, columnspan=1)
+    btn7 = tk.Button(root, text="7", command=lambda: add(7), width=5, font=("Arial", 14), bg='#505050', fg = 'white')
+    btn7.grid(row=4, column=1, columnspan=1)
+    btn8 = tk.Button(root, text="8", command=lambda: add(8), width=5, font=("Arial", 14), bg='#505050', fg = 'white')
+    btn8.grid(row=4, column=2, columnspan=1)
+    btn9 = tk.Button(root, text="9", command=lambda: add(9), width=5, font=("Arial", 14), bg='#505050', fg = 'white')
+    btn9.grid(row=4, column=3, columnspan=1)
+    btn0 = tk.Button(root, text="0", command=lambda: add(0), width=5, font=("Arial", 14), bg='#505050', fg = 'white')
+    btn0.grid(row=5, column=2, columnspan=1)
+
+    btn_plus = tk.Button(root, text="+", command=lambda: add("+"), width=3, font=("Arial", 14), bg='#FF9500', fg = 'white')
+    btn_plus.grid(row=2, column=4, columnspan=2)
+    btn_minus = tk.Button(root, text="-", command=lambda: add("-"), width=3, font=("Arial", 14), bg='#FF9500', fg = 'white')
+    btn_minus.grid(row=3, column=4, columnspan=2)
+    btn_mul = tk.Button(root, text="x", command=lambda: add("*"), width=3, font=("Arial", 14), bg='#FF9500', fg = 'white')
+    btn_mul.grid(row=4, column=4, columnspan=2)
+    btn_div = tk.Button(root, text="/", command=lambda: add("/"), width=3, font=("Arial", 14), bg='#FF9500', fg = 'white')
+    btn_div.grid(row=5, column=4, columnspan=2)
+
+    btn_open = tk.Button(root, text="(", command=lambda: add("("), width=5, font=("Arial", 14), bg='#D4D4D2', fg = 'black')
+    btn_open.grid(row=5, column=1, columnspan=1)
+    btn_close = tk.Button(root, text=")", command=lambda: add(")"), width=5, font=("Arial", 14), bg='#D4D4D2', fg = 'black')
+    btn_close.grid(row=5, column=3, columnspan=1)
+
+    btn_equal = tk.Button(root, text="=", command=evaluate, width=9, font=("Arial", 14), bg='#FF9500', fg = 'white')
+    btn_equal.grid(row=6, column=3, columnspan=2)
+    btn_clear = tk.Button(root, text="AC", command=clear, width=11, font=("Arial", 14), bg='#D4D4D2', fg = 'black')
+    btn_clear.grid(row=6, column=1, columnspan=2)
+
+    root.mainloop()
+    return
+    
+def main_menu(win):  
+    run = True
+    while run:
+        #sound2.play(loops=-1)
+        # win = pygame.display.set_mode((s_width, s_height))
+        win.fill('#fad0c1') #f3c3b0 #fdc5b5
+        title_b.draw(win)
+        pygame.font.init()
+        font = pygame.font.SysFont('constantia', 120)
+        label = font.render('studyAMIGO', 1, (0,0,100))
+
+        #pygame.draw.rect(win, (0,0,0), (top_left_x-250 ,top_left_y+500, s_width , s_height/4), 0)
+        #win.blit(label, (top_left_x + play_width / 2 - (label.get_width() / 2), 250))
+
+        if tomato_b.draw(win):
+            timer = pygame.display.set_mode((s_width, s_height))
+            pygame.display.set_caption('studyAMIGO')
+            pomodoro(timer)
+
+        if calc_b.draw(win):
+            calculator()
+
+        if todo_b.draw(win):
+            root = Tk()
+            root.title("To-Do List")
+
+            def add_task():
+                task = entry_task.get()
+                if task != "":
+                    listbox_task.insert(tk.END, task)
+                    entry_task.delete(0, tk.END)
+                else:
+                    tk.messagebox.showwarning(title="Warning!", message="Enter the task")
+            def del_task():
+                try:
+                    task_idx = listbox_task.curselection()[0]
+                    listbox_task.delete(task_idx)
+                except:
+                    tk.messagebox.showwarning(title="Warning!", message = "Select the task")
+
+            frame = tk.Frame(root)
+            frame.pack()
+
+            listbox_task = tk.Listbox(frame, height=10, width=30)
+            listbox_task.pack(side=tk.LEFT)
+            listbox_task.config(bg="#fde0b4", font = ("Arial", 15), fg = "black")
+
+            scroll_tasks = tk.Scrollbar(frame)
+            scroll_tasks.pack(side=tk.RIGHT, fill=tk.Y)
+            listbox_task.config(yscrollcommand = scroll_tasks.set)
+            scroll_tasks.config(command = listbox_task.yview)
+
+            entry_task = tk.Entry(root, width = 50)
+            entry_task.pack()
+
+            add_button = tk.Button(root, text="Add Task", height = 2,width=38, font=("Arial", 10, 'bold'), bg='#f97272', fg = 'white', command = add_task)
+            add_button.pack()
+
+            del_button = tk.Button(root, text="Delete Task",height = 2, width = 38, font=("Arial", 10, 'bold'), bg='#f97272', fg = 'white', command= del_task)
+            del_button.pack()
+
+            root.mainloop()
+
+        if notes_b.draw(win):
+
+            def savefile():
+                new_file = asksaveasfile(mode = 'w', filetype = [('text files', '.txt')])
+                if new_file is None:
+                    return
+                text = str(entry.get(1.0, END))
+                new_file.write(text)
+                new_file.close()
+
+            def openfile():
+                file = askopenfile(mode = 'r', filetype = [("text files", '*.txt')])
+                if file is not None:
+                    content = file.read()
+                entry.insert(INSERT, content)
+
+            def clearfile():
+                entry.delete(1.0, END)
+
+            root = Tk()
+            root.title("Notepad")
+            root.geometry("400x600")
+            root.config(bg = "#ff8fab")
+
+            frame = tk.Frame(root)
+            frame.pack(padx = 10, pady = 5, anchor = 'nw')
+
+            entry = Text(root, bg= "#ffc2d1", wrap=WORD, font = ("poppins", 15))
+            entry.pack(padx=10, pady=5, expand = TRUE, fill = BOTH)
+
+            load_button = tk.Button(frame, width = 5, height = 3, text="Load", font=("Arial", 10, 'bold'), bg="white", command = openfile)
+            load_button.pack(side=LEFT)
+
+            save_button = tk.Button(frame, width = 5, height = 3, text="Save", font=("Arial", 10, 'bold'), bg="white", command = savefile)
+            save_button.pack(side=LEFT)
+
+            clear_button = tk.Button(frame, width = 5, height = 3, text="Clear", font=("Arial", 10, 'bold'), bg="white", command = clearfile)
+            clear_button.pack(side=LEFT)
+
+            
+            root.mainloop()
+
+
+        pygame.display.update()
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                run = False
+    pygame.display.quit()
+
+win = pygame.display.set_mode((s_width, s_height))
+pygame.display.set_caption('studyAMIGO')
+
+main_menu(win)
