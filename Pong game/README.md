@@ -8,13 +8,13 @@ We developed a home interface that captures the two player names and provides ga
 2. 🎮 Controls:
        - Left paddle: Q (up), A (down)
        - Right paddle: P (up), L (down)
-4. ⚙️ Smooth Gameplay:
+3. ⚙️ Smooth Gameplay:
 Track your scores as the ball resets to the center after each point, and keep playing until a winner is declared upon reaching the game point! ⚡
 
-5. 🏆 Score Tracking:
+4. 🏆 Score Tracking:
 Miss the ball, and your opponent scores! Keep an eye on the score to see who dominates the match. 💥
 
-6. 🌟Tkinter module:
+5. 🌟Tkinter module:
 The game flow and user interactions are handled effortlessly with Tkinter, ensuring a smooth and enjoyable experience.
 
 Get ready for some fast-paced retro fun! 🕹️
