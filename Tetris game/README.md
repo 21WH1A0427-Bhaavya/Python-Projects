@@ -9,10 +9,10 @@ Players can move and rotate these pieces to fit them into the playing field.
 As levels progress, Tetrominoes fall faster, challenging players to clear a set number of lines to advance. 🎯
 
 3. 🎯 Scoring System:
-  ⦿ Double: Clear two lines at once
-  ⦿ Triple: Clear three lines
-  ⦿ Tetris: Clear four lines
-  ⦿ Back-to-Back Tetris: Consecutive Tetrises for extra points 🏆
+  - Double: Clear two lines at once
+  - Triple: Clear three lines
+  - Tetris: Clear four lines
+  - Back-to-Back Tetris: Consecutive Tetrises for extra points 🏆
 
 4. 💥 Game Over:
 The game ends when the Tetrominoes reach the top of the playing field. 🚧
