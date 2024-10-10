@@ -1,4 +1,4 @@
-#Python Projects - From Games to Machine Learning 🚀
+# Python Projects - From Games to Machine Learning 🚀
 
 Welcome to my collection of Python projects developed throughout my engineering journey! 🌟 From game development to machine learning, these projects range from beginner to intermediate proficiency.
 
