@@ -1,6 +1,5 @@
 # 📚 StudyAmigo – Your Student Productivity Companion 🎯
-StudyAmigo is a student-centric productivity app designed to help manage tasks, boost focus, and keep you on track! 🚀 It’s packed with features to support your daily study and work routines in a user-friendly way.
-
+StudyAmigo is a student-centric productivity app designed to help manage tasks, boost focus, and keep you on track! 🚀 It integrates various features tailored to support student workflows.
 Key Features:
 1. 📝 Customizable To-Do Lists:
 Easily add, edit, save, and load tasks to manage your workflow and stay organized. Perfect for keeping track of assignments and deadlines! ✅
