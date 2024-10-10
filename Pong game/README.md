@@ -1,4 +1,4 @@
-# 🏓 PONG Game – Gameleon Hackathon (2nd Place) 🏆
+# 🏓 PONG Game
 This is our version of the classic PONG game developed as a team of 2, for the Gameleon Hackathon, where we secured 2nd place! 🎉 Built with Tkinter, this game comes with a home interface, a multi-window setup, and smooth gameplay. 🎮
 
 Key Features:
