@@ -6,6 +6,7 @@ Key Features:
 We developed a home interface that captures the two player names and provides gameplay instructions before starting the match.
 
 2. 🎮 Controls:
+   
        - Left paddle: Q (up), A (down)
        - Right paddle: P (up), L (down)
 3. ⚙️ Smooth Gameplay:
