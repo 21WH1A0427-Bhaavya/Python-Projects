@@ -6,10 +6,9 @@ Easily add, edit, save, and load tasks to manage your workflow and stay organize
 
 2. ⏱️ Pomodoro Timer:
 Boost productivity with the built-in Pomodoro Timer! Configurable intervals include:
-
-25-minute focus sessions
-5-minute short breaks
-15-minute long breaks
+  - 25-minute focus sessions
+  - 5-minute short breaks
+  - 15-minute long breaks
 
 3. Keep your focus sharp and stay refreshed. 🍅
 🧮 Built-in Calculator:
